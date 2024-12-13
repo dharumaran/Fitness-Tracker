@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Fitness Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Login to Fitness Tracker</h2>
+        <form id="loginForm">
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div>
+                <button type="submit">Login</button>
+            </div>
+            <p>Don't have an account? <a href="signup.html">Register</a></p>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('loginForm').addEventListener('submit', async function (event) {
+                event.preventDefault(); // Prevent default form submission
+
+                // Get user input values
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                try {
+                    // Send POST request to login endpoint
+                    const response = await fetch('/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ email, password }), // Send email and password
+                    });
+
+                    const result = await response.json(); // Parse JSON response
+
+                    // Handle response
+                    if (response.ok) {
+                        alert(result.message); // Display success message
+                        window.location.href = result.redirectTo; // Redirect on success
+                    } else {
+                        alert(result.message || 'Login failed');
+                    }
+                } catch (error) {
+                    // Handle errors
+                    console.error('Error during login:', error);
+                    alert('An error occurred. Please try again later.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

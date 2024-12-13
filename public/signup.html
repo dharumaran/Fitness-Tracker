@@ -1,0 +1,41 @@
+<!-- signup.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+</head>
+<body>
+    <h1>Signup</h1>
+    <form action="/register" method="POST">
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" required>
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" required>
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required>
+        </div>
+        <div>
+            <label for="age">Age:</label>
+            <input type="number" name="age" id="age" required>
+        </div>
+        <div>
+            <label for="height_cm">Height (cm):</label>
+            <input type="number" name="height_cm" id="height_cm" required>
+        </div>
+        <div>
+            <label for="weight_kg">Weight (kg):</label>
+            <input type="number" name="weight_kg" id="weight_kg" required>
+        </div>
+        <div>
+            <button type="submit">Signup</button>
+        </div>
+    </form>
+</body>
+</html>

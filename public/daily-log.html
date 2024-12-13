@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Log</title>
+</head>
+<body>
+    <h1>Enter Your Daily Log</h1>
+    <form action="/submit-daily-log" method="POST">
+        <label for="steps">Steps Taken:</label>
+        <input type="number" id="steps" name="steps" required><br><br>
+
+        <label for="workout_mins">Minutes of Workout:</label>
+        <input type="number" id="workout_mins" name="workout_mins" required><br><br>
+
+        <label for="calories">Calories Burned:</label>
+        <input type="number" id="calories" name="calories" required><br><br>
+
+        <label for="water_intake">Water Intake (liters):</label>
+        <input type="number" step="0.1" id="water_intake" name="water_intake" required><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

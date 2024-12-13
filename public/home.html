@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <style>
+        /* Inline styles for quick adjustments, move to styles.css if preferred */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .donut-container {
+            position: relative;
+            height: 300px;
+            width: 300px;
+            margin: 20px auto;
+        }
+
+        .donut-container canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #3498db;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        #goalsButton {
+            margin-top: 20px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-top: 40px;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Your Dashboard</h1>
+
+        <!-- Donut Chart Container -->
+        <div class="donut-container">
+            <canvas id="donutChart"></canvas>
+        </div>
+
+        <!-- Button to Toggle between Steps, Calories, and Minutes -->
+        <div class="button-container">
+            <button id="toggleButton" onclick="toggleData()">Show Calories</button>
+        </div>
+
+        <!-- Goals Button -->
+        <button id="goalsButton" onclick="window.location.href='/goals'">Goals</button>
+
+        <h2 id="dataDescription">Step Progress</h2>
+
+        <!-- New Features -->
+        <div class="footer">
+            <p>&copy; 2024 Fitness Dashboard. All Rights Reserved.</p>
+            <p>Contact Support: <a href="mailto:support@fitness.com">support@fitness.com</a></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js for donut chart -->
+    <script>
+        // Data for Steps, Calories, and Minutes (Example Data)
+        const goalData = {
+            steps: { achieved: 7500, goal: 10000 },
+            calories: { achieved: 200, goal: 250 },
+            minutes: { achieved: 50, goal: 60 }
+        };
+
+        let currentData = 'steps'; // Default to 'steps'
+
+        // Initialize the donut chart
+        let donutChart;
+        function initChart() {
+            const ctx = document.getElementById('donutChart').getContext('2d');
+            donutChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Achieved', 'Remaining'],
+                    datasets: [{
+                        data: [goalData[currentData].achieved, goalData[currentData].goal - goalData[currentData].achieved],
+                        backgroundColor: ['#3498db', '#e1e1e1'],
+                        borderWidth: 0,
+                    }]
+                },
+                options: {
+                    circumference: Math.PI,
+                    rotation: Math.PI,
+                    cutout: '70%', // Makes it a donut
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            enabled: false // Disable tooltip
+                        },
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update the chart data based on the selected type
+        function updateChartData() {
+            donutChart.data.datasets[0].data = [
+                goalData[currentData].achieved,
+                goalData[currentData].goal - goalData[currentData].achieved
+            ];
+            donutChart.update();
+        }
+
+        // Toggle button functionality
+        function toggleData() {
+            if (currentData === 'steps') {
+                currentData = 'calories';
+                document.getElementById('toggleButton').textContent = 'Show Minutes';
+                document.getElementById('dataDescription').textContent = 'Calories Burnt';
+            } else if (currentData === 'calories') {
+                currentData = 'minutes';
+                document.getElementById('toggleButton').textContent = 'Show Steps';
+                document.getElementById('dataDescription').textContent = 'Minutes Exercised';
+            } else {
+                currentData = 'steps';
+                document.getElementById('toggleButton').textContent = 'Show Calories';
+                document.getElementById('dataDescription').textContent = 'Step Progress';
+            }
+            updateChartData();
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            initChart();
+        });
+    </script>
+</body>
+</html>

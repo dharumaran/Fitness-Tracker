@@ -1,0 +1,46 @@
+.home-container {
+    padding: 20px;
+    text-align: center;
+}
+
+.chart-container {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    margin: 0 auto;
+}
+
+#progressChart {
+    width: 100%;
+    height: 100%;
+}
+
+.center-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.water-intake {
+    margin-top: 30px;
+}
+
+.daily-log-btn {
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
