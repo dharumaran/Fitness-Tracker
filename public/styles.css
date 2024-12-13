@@ -1,46 +1,95 @@
+/* Base Styles */
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Home Container */
 .home-container {
     padding: 20px;
     text-align: center;
 }
 
+/* Chart Container */
 .chart-container {
     position: relative;
     width: 250px;
     height: 250px;
     margin: 0 auto;
+    background: radial-gradient(circle, #333, #222);
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
+/* Chart */
 #progressChart {
     width: 100%;
     height: 100%;
 }
 
+/* Centered Text */
 .center-text {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 20px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #e0e0e0;
     cursor: pointer;
+    transition: color 0.3s;
 }
 
+.center-text:hover {
+    color: #90caf9;
+}
+
+/* Water Intake Section */
 .water-intake {
     margin-top: 30px;
+    font-size: 18px;
+    color: #b3b3b3;
 }
 
+/* Daily Log Button */
 .daily-log-btn {
     margin-top: 20px;
 }
 
+/* Buttons */
 button {
     padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
+    background-color: #2196F3;
+    color: #e0e0e0;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #1976D2;
+    transform: scale(1.05);
+}
+
+button:active {
+    background-color: #1565C0;
+    transform: scale(1);
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 768px) {
+    .chart-container {
+        width: 200px;
+        height: 200px;
+    }
+
+    .center-text {
+        font-size: 18px;
+    }
 }

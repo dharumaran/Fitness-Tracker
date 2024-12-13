@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup - Fitness Tracker</title>
+    <title>Daily Log - Fitness Tracker</title>
     <style>
         /* Base styles for dark mode */
         body {
@@ -14,8 +14,8 @@
             padding: 0;
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
+            align-items: flex-start;
+            min-height: 100vh;
         }
 
         .container {
@@ -24,29 +24,33 @@
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
             width: 100%;
-            max-width: 400px;
-            text-align: center;
+            max-width: 500px;
         }
 
         h1 {
             margin-bottom: 30px;
             font-size: 28px;
             color: #90caf9;
+            text-align: center;
+        }
+
+        h3 {
+            color: #90caf9;
+            margin-bottom: 20px;
         }
 
         form div {
             margin-bottom: 15px;
-            text-align: left;
         }
 
         label {
-            display: block;
+            display: inline-block;
             margin-bottom: 5px;
             font-weight: bold;
             color: #b3b3b3;
         }
 
-        input {
+        input[type="number"] {
             width: 100%;
             padding: 10px;
             background-color: #333;
@@ -57,7 +61,7 @@
             transition: background-color 0.3s, border-color 0.3s;
         }
 
-        input:focus {
+        input[type="number"]:focus {
             background-color: #444;
             border-color: #2196F3;
             outline: none;
@@ -90,50 +94,38 @@
             margin-top: 20px;
             color: #b3b3b3;
         }
-
-        a {
-            color: #90caf9;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Signup to Fitness Tracker</h1>
-        <form action="/register" method="POST">
+        <h1>Enter Your Daily Log</h1>
+        <form action="/set-goals" method="POST">
+            <h3>Set Your Goals</h3>
+
             <div>
-                <label for="username">Username:</label>
-                <input type="text" name="username" id="username" required>
+                <label for="stepsPerDay">Steps Goal:</label>
+                <input type="number" name="stepsPerDay" id="stepsPerDay" placeholder="Steps per day" required>
             </div>
+
             <div>
-                <label for="email">Email:</label>
-                <input type="email" name="email" id="email" required>
+                <label for="caloriesDeficit">Calories Goal:</label>
+                <input type="number" name="caloriesDeficit" id="caloriesDeficit" placeholder="Calories deficit" required>
             </div>
+
             <div>
-                <label for="password">Password:</label>
-                <input type="password" name="password" id="password" required>
+                <label for="minsPerDay">Workout Minutes Goal:</label>
+                <input type="number" name="minsPerDay" id="minsPerDay" placeholder="Minutes per day" required>
             </div>
+
             <div>
-                <label for="age">Age:</label>
-                <input type="number" name="age" id="age" required>
+                <label for="waterGoal">Hydration Goal (liters):</label>
+                <input type="number" step="0.1" name="waterGoal" id="waterGoal" placeholder="Liters per day" required>
             </div>
+
             <div>
-                <label for="height_cm">Height (cm):</label>
-                <input type="number" name="height_cm" id="height_cm" required>
-            </div>
-            <div>
-                <label for="weight_kg">Weight (kg):</label>
-                <input type="number" name="weight_kg" id="weight_kg" required>
-            </div>
-            <div>
-                <button type="submit">Signup</button>
+                <button type="submit">Save Goals</button>
             </div>
         </form>
-        <p>Already have an account? <a href="login.html">Login</a></p>
     </div>
 </body>
 </html>

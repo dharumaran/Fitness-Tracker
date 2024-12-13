@@ -84,18 +84,18 @@ app.post('/login', async (req, res) => {
             if (match) {
                 req.session.userId = rows[0].id;
                 console.log("User logged in with ID:", rows[0].id);
-                res.json({ message: 'Login successful', redirectTo: '/home' }); // Send JSON response
+                res.redirect('/home'); // Redirect to home page after successful login
             } else {
                 console.warn("Invalid credentials for email:", email);
-                res.status(401).json({ message: 'Invalid credentials' }); // Send JSON response
+                res.status(401).send('Invalid credentials');
             }
         } else {
             console.warn("User not found for email:", email);
-            res.status(404).json({ message: 'User not found' }); // Send JSON response
+            res.status(404).send('User not found');
         }
     } catch (err) {
         console.error("Error during login:", err);
-        res.status(500).json({ message: 'Error logging in user' }); // Send JSON response
+        res.status(500).send('Error logging in user');
     }
 });
 
@@ -120,8 +120,8 @@ app.get('/home', isAuthenticated, (req, res) => {
 app.get('/profile', isAuthenticated, async (req, res) => {
     try {
         const userId = req.session.userId;
-        const [userData] = await pool.query('SELECT * FROM user_data WHERE user_id = ?', [userId]);
-        res.json(userData);
+        const [userData] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
+        res.json(userData[0]);
     } catch (err) {
         console.error("Error fetching user data:", err);
         res.status(500).send('Error fetching user data');
@@ -134,20 +134,50 @@ app.get('/daily-log', isAuthenticated, (req, res) => {
 });
 
 // Handle the daily log form submission
-app.post('/submit-daily-log', isAuthenticated, async (req, res) => {
-    const { steps, workout_mins, calories, water_intake } = req.body;
+app.post('/set-goals', isAuthenticated, async (req, res) => {
+    const { goals, stepsPerDay, caloriesDeficit, minsPerDay, waterGoal } = req.body;
+    const userId = req.session.userId;
+
+    // Collect goals based on user selection
+    const goalEntries = [];
+
+    if (goals?.includes('steps') && stepsPerDay) {
+        goalEntries.push({ goal_type: 'Steps', target_value: stepsPerDay });
+    }
+    if (goals?.includes('calories') && caloriesDeficit) {
+        goalEntries.push({ goal_type: 'Calorie Deficit', target_value: caloriesDeficit });
+    }
+    if (goals?.includes('mins') && minsPerDay) {
+        goalEntries.push({ goal_type: 'Minutes', target_value: minsPerDay });
+    }
+    // Always include water goal
+    goalEntries.push({ goal_type: 'Water', target_value: waterGoal });
 
     try {
-        await pool.query(
-            'INSERT INTO user_data (user_id, steps, workout_mins, calories, water_intake) VALUES (?, ?, ?, ?, ?)',
-            [req.session.userId, steps, workout_mins, calories, water_intake]
-        );
-        console.log("Daily log submitted for user ID:", req.session.userId);
+        const startDate = new Date();
+        const endDate = null;
+
+        for (const goal of goalEntries) {
+            await pool.query(
+                `INSERT INTO goals (user_id, goal_type, target_value, start_date, end_date)
+                VALUES (?, ?, ?, ?, ?)
+                ON DUPLICATE KEY UPDATE 
+                target_value = VALUES(target_value), start_date = VALUES(start_date), end_date = VALUES(end_date)`,
+                [userId, goal.goal_type, goal.target_value, startDate, endDate]
+            );
+        }
+
+        console.log("Goals updated for user:", userId);
         res.redirect('/home');
     } catch (err) {
-        console.error("Error saving daily log:", err);
-        res.status(500).send('Error saving daily log');
+        console.error("Error updating goals:", err);
+        res.status(500).send("Failed to save goals.");
     }
+});
+
+// Serve the goals page
+app.get('/goals', isAuthenticated, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'goals.html'));
 });
 
 // Start the server

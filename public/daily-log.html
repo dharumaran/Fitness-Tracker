@@ -3,24 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Log</title>
+    <title>Daily Log - Fitness Tracker</title>
+    <style>
+        /* Base styles for dark mode */
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #1e1e1e;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            font-size: 28px;
+            color: #90caf9;
+        }
+
+        h3 {
+            color: #90caf9;
+            margin-bottom: 20px;
+        }
+
+        form div {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        label {
+            display: inline-block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #b3b3b3;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #333;
+            color: #e0e0e0;
+            border: 1px solid #444;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            background-color: #444;
+            border-color: #2196F3;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #2196F3;
+            color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background-color: #1976D2;
+            transform: scale(1.05);
+        }
+
+        button:active {
+            background-color: #1565C0;
+            transform: scale(1);
+        }
+
+        p {
+            margin-top: 20px;
+            color: #b3b3b3;
+        }
+    </style>
 </head>
 <body>
-    <h1>Enter Your Daily Log</h1>
-    <form action="/submit-daily-log" method="POST">
-        <label for="steps">Steps Taken:</label>
-        <input type="number" id="steps" name="steps" required><br><br>
+    <div class="container">
+        <h1>Enter Your Daily Log</h1>
+        <form action="/set-goals" method="POST">
+            <h3>Set Your Goals</h3>
 
-        <label for="workout_mins">Minutes of Workout:</label>
-        <input type="number" id="workout_mins" name="workout_mins" required><br><br>
+            <div>
+                <label for="stepsPerDay">Steps Goal:</label>
+                <input type="number" name="stepsPerDay" id="stepsPerDay" placeholder="Steps per day" required>
+            </div>
 
-        <label for="calories">Calories Burned:</label>
-        <input type="number" id="calories" name="calories" required><br><br>
+            <div>
+                <label for="caloriesDeficit">Calories Goal:</label>
+                <input type="number" name="caloriesDeficit" id="caloriesDeficit" placeholder="Calories deficit" required>
+            </div>
 
-        <label for="water_intake">Water Intake (liters):</label>
-        <input type="number" step="0.1" id="water_intake" name="water_intake" required><br><br>
+            <div>
+                <label for="minsPerDay">Workout Minutes Goal:</label>
+                <input type="number" name="minsPerDay" id="minsPerDay" placeholder="Minutes per day" required>
+            </div>
 
-        <button type="submit">Submit</button>
-    </form>
+            <!-- Hydration always enabled -->
+            <div>
+                <label for="waterGoal">Hydration Goal (liters):</label>
+                <input type="number" step="0.1" name="waterGoal" id="waterGoal" placeholder="Liters per day" required>
+            </div>
+
+            <div>
+                <button type="submit">Save Goals</button>
+            </div>
+        </form>
+    </div>
 </body>
 </html>
