@@ -84,18 +84,18 @@ app.post('/login', async (req, res) => {
             if (match) {
                 req.session.userId = rows[0].id;
                 console.log("User logged in with ID:", rows[0].id);
-                res.redirect('/home'); // Redirect to home page after successful login
+                res.json({ message: 'Login successful', redirectTo: '/home' }); // Send JSON response
             } else {
                 console.warn("Invalid credentials for email:", email);
-                res.status(401).send('Invalid credentials');
+                res.status(401).json({ message: 'Invalid credentials' }); // Send JSON response
             }
         } else {
             console.warn("User not found for email:", email);
-            res.status(404).send('User not found');
+            res.status(404).json({ message: 'User not found' }); // Send JSON response
         }
     } catch (err) {
         console.error("Error during login:", err);
-        res.status(500).send('Error logging in user');
+        res.status(500).json({ message: 'Error logging in user' }); // Send JSON response
     }
 });
 
@@ -120,8 +120,8 @@ app.get('/home', isAuthenticated, (req, res) => {
 app.get('/profile', isAuthenticated, async (req, res) => {
     try {
         const userId = req.session.userId;
-        const [userData] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
-        res.json(userData[0]);
+        const [userData] = await pool.query('SELECT * FROM user_data WHERE user_id = ?', [userId]);
+        res.json(userData);
     } catch (err) {
         console.error("Error fetching user data:", err);
         res.status(500).send('Error fetching user data');
@@ -174,10 +174,103 @@ app.post('/set-goals', isAuthenticated, async (req, res) => {
         res.status(500).send("Failed to save goals.");
     }
 });
+app.get('/submit-log', isAuthenticated, async (req, res) => {
+    const userId = req.session.userId;
+
+    try {
+        // Fetch previously set goals for the user
+        const [rows] = await pool.query(
+            `SELECT goal_type FROM goals WHERE user_id = ?`,
+            [userId]
+        );
+
+        const goals = rows.map(row => row.goal_type); // Extract goal types
+
+        res.render('daily-log', { goals }); // Render the daily log form
+    } catch (err) {
+        console.error("Error fetching goals:", err);
+        res.status(500).send("Failed to load daily log page.");
+    }
+});
+app.post('/submit-log', isAuthenticated, async (req, res) => {
+    const userId = req.session.userId;
+    const { logDate, steps, activeMinutes, caloriesBurned, caloriesEaten, weightKg } = req.body;
+
+    try {
+        // Insert daily log data into the activity_log table
+        await pool.query(
+            `INSERT INTO activity_log (user_id, log_date, steps, active_minutes, calories_burned, calories_eaten, weight_kg)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+            steps = VALUES(steps),
+            active_minutes = VALUES(active_minutes),
+            calories_burned = VALUES(calories_burned),
+            calories_eaten = VALUES(calories_eaten),
+            weight_kg = VALUES(weight_kg)`,
+            [userId, logDate, steps || 0, activeMinutes || 0, caloriesBurned || null, caloriesEaten || null, weightKg || null]
+        );
+
+        console.log("Daily log saved for user:", userId);
+        res.redirect('/home');
+    } catch (err) {
+        console.error("Error saving daily log:", err);
+        res.status(500).send("Failed to save daily log.");
+    }
+});
+
+
 
 // Serve the goals page
 app.get('/goals', isAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'goals.html'));
+});
+
+// Handle the goals form submission
+app.post('/set-goals', isAuthenticated, async (req, res) => {
+    const { stepsPerDay, caloriesDeficit, minsPerDay } = req.body;
+
+    // Collect goals based on the user's input
+    const stepsGoal = req.body.goals?.steps ? stepsPerDay : null;
+    const caloriesGoal = req.body.goals?.calories ? caloriesDeficit : null;
+    const minsGoal = req.body.goals?.mins ? minsPerDay : null;
+
+    try {
+        const userId = req.session.userId;
+        const startDate = new Date(); // Assuming goals start immediately
+        const endDate = null; // Optional, based on your requirements
+
+        // Build an array of goals
+        const goals = [];
+
+        if (stepsGoal) {
+            goals.push({ goal_type: 'Steps', target_value: stepsGoal, start_date: startDate, end_date: endDate });
+        }
+        if (caloriesGoal) {
+            goals.push({ goal_type: 'Calorie Deficit', target_value: caloriesGoal, start_date: startDate, end_date: endDate });
+        }
+        if (minsGoal) {
+            goals.push({ goal_type: 'Minutes', target_value: minsGoal, start_date: startDate, end_date: endDate });
+        }
+
+        // Insert each goal into the database
+        for (const goal of goals) {
+            await pool.query(
+                `INSERT INTO goals (user_id, goal_type, target_value, start_date, end_date) 
+                VALUES (?, ?, ?, ?, ?)
+                ON DUPLICATE KEY UPDATE 
+                target_value = VALUES(target_value), start_date = VALUES(start_date), end_date = VALUES(end_date)`,
+                [userId, goal.goal_type, goal.target_value, goal.start_date, goal.end_date]
+            );
+        }
+
+        console.log("User goals updated successfully");
+
+        // Redirect to the home page after setting goals
+        res.redirect('/home');
+    } catch (err) {
+        console.error("Error saving user goals:", err);
+        res.status(500).send('Error saving user goals');
+    }
 });
 
 // Start the server

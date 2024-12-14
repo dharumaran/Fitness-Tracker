@@ -98,34 +98,34 @@
 </head>
 <body>
     <div class="container">
-        <h1>Enter Your Daily Log</h1>
-        <form action="/set-goals" method="POST">
-            <h3>Set Your Goals</h3>
+        <h1>Set Your Daily Goals</h1>
+    <form action="/set-goals" method="POST">
+        <h3>Define Your Targets</h3>
 
-            <div>
-                <label for="stepsPerDay">Steps Goal:</label>
-                <input type="number" name="stepsPerDay" id="stepsPerDay" placeholder="Steps per day" required>
-            </div>
+        <div>
+            <label for="stepsGoal">Steps Goal:</label>
+            <input type="number" name="stepsGoal" id="stepsGoal" placeholder="Enter steps goal" required>
+        </div>
 
-            <div>
-                <label for="caloriesDeficit">Calories Goal:</label>
-                <input type="number" name="caloriesDeficit" id="caloriesDeficit" placeholder="Calories deficit" required>
-            </div>
+        <div>
+            <label for="caloriesDeficit">Calories Deficit Goal:</label>
+            <input type="number" name="caloriesDeficit" id="caloriesDeficit" placeholder="Enter calorie deficit goal" required>
+        </div>
 
-            <div>
-                <label for="minsPerDay">Workout Minutes Goal:</label>
-                <input type="number" name="minsPerDay" id="minsPerDay" placeholder="Minutes per day" required>
-            </div>
+        <div>
+            <label for="minsPerDay">Workout Duration Goal (minutes):</label>
+            <input type="number" name="minsPerDay" id="minsPerDay" placeholder="Enter workout duration goal" required>
+        </div>
 
-            <div>
-                <label for="waterGoal">Hydration Goal (liters):</label>
-                <input type="number" step="0.1" name="waterGoal" id="waterGoal" placeholder="Liters per day" required>
-            </div>
+        <div>
+            <label for="waterGoal">Hydration Goal (liters):</label>
+            <input type="number" step="0.1" name="waterGoal" id="waterGoal" placeholder="Enter hydration goal" required>
+        </div>
 
-            <div>
-                <button type="submit">Save Goals</button>
-            </div>
-        </form>
+        <div>
+            <button type="submit">Save Goals</button>
+        </div>
+    </form>
     </div>
 </body>
 </html>
